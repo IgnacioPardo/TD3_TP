@@ -16,14 +16,14 @@ const set<int> & RedSocial::usuarios() const{
 
 string RedSocial::obtener_alias(int id) const{
 
-		Usuario * usr = this->_usr_id.at(id); // O(log n)
+		Usuario *usr = this->_usr_id.at(id); // O(log n)
 	
 		return usr->obtener_alias(); // O(1)
 }
 
 const set<string> & RedSocial::obtener_amigos(int id) const{
 	
-    Usuario * usr = this->_usr_id.at(id); // O(log n)
+    Usuario *usr = this->_usr_id.at(id); // O(log n)
     
 		return usr->obtener_amigos(); // O(1)
 }
@@ -34,7 +34,7 @@ int RedSocial::cantidad_amistades() const{
 }
 
 void RedSocial::registrar_usuario(string alias, int id){
-    Usuario * usr = new Usuario(id, alias);
+    Usuario *usr = new Usuario(id, alias);
 
 		if (this->_popular == nullptr){
 			this->_popular = usr;
@@ -127,7 +127,7 @@ void RedSocial::desamigar_usuarios(int id_A, int id_B){
 }
 
 int RedSocial::obtener_id(string alias) const{
-		Usuario * usr = this->_usr_alias.at(alias); // O(log n)
+		Usuario *usr = this->_usr_alias.at(alias); // O(log n)
 	
     return usr->obtener_id(); // O(1)
 }

@@ -35,7 +35,7 @@ class RedSocial{
 
   private:
 		int _cant_amistades;
-		Usuario * _popular;
+		Usuario *_popular;
 		std::set<int> _usuarios;
 		std::map<int, Usuario*> _usr_id;
 		std::map<std::string, Usuario*> _usr_alias;
