@@ -2,6 +2,7 @@
 *.nix
 *.o
 .replit
+.breakpoints
 .ccls-cache
 /lib
 /CMakeFiles
