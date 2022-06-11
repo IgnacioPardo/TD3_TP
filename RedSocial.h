@@ -20,9 +20,9 @@
 									((∃!!j: int) j ∈ keys(rs._usr_id) => rs._usr_id[j] = u => j = u.id) && 
 									((∃!!k: string) k ∈ keys(rs._usr_alias) => rs._usr_alias[k] = u)) &&
 								rs._cant_amistades =  | (⊖ (i: int) ∈ rs._usuarios (rs._usr_id[i]._amigos)) | && 
-								(| rs._usuarios | > 0 =>
+								((| rs._usuarios | > 0 =>
 									rs._popular._id ∈ rs._usuarios &&
-									((∀i: int) i ∈ rs._usuarios => i._cantidad_amigos <= rs._popular._cantidad_amigos)
+									((∀i: int) i ∈ rs._usuarios => i._cantidad_amigos <= rs._popular._cantidad_amigos))
 									|| rs._popular = nullptr)
 */
 
