@@ -6,11 +6,12 @@
 
 /*
 
-	La cantidad de amigos es igual a la cantidad de elementos en el conjunto amigos, y a su vez es igual a la cantidad de alias en el conjunto alias_amigos.
-	Un Usuario no puede tenerse de amistad a si mismo, por lo tanto su alias no pertenece al conjunto alias_amigos y si mismo no pertenece al conjunto amigos.
-	
-	Rep(u : Usuario) ≡ u._cantidad_amigos = |u._cantidad_amigos| && *u ∉ u._amigos && u._alias ∉ u._alias_amigos
-
+		La cantidad de amigos es igual a la cantidad de elementos en el conjunto amigos, y a su vez es igual a la cantidad de alias en el conjunto alias_amigos.
+		Un Usuario no puede tenerse de amistad a si mismo, por lo tanto su alias no pertenece al conjunto alias_amigos y el puntero a si mismo no pertenece al conjunto amigos.
+		
+		Rep(u : Usuario) ≡ 	u._cantidad_amigos = | u._cantidad_amigos | && 
+							&u ∉ u._amigos && u._alias ∉ u._alias_amigos &&
+							| u.alias | <= 100
 */
 
 class Usuario{
@@ -33,4 +34,4 @@ class Usuario{
     std::set<std::string> _alias_amigos;    
 };
 
-#endif
+#endif	

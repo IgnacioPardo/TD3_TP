@@ -7,13 +7,23 @@
 #include "Usuario.h"
 
 /*
-	No existen dos usuarios con el mismo id ni con el mismo alias
-	La cantidad de amistades es la cantidad de elementos de la diferencia simetrica entre los conjuntos de amigos de todos los usuarios"
-	
-	Rep(rs : RedSocial) ≡ (∀ (i: int) ∈ rs._usuarios => 
-							∄ (j: int) ∈ rs._usuarios i != j / rs._usr_id[i] == rs._usr_id[j] &&
-							∄ (j: int) ∈ rs._usuarios i != j / rs._usr_alias[rs._usr_id[i]._alias] == rs._usr_alias[rs._usr_id[j]._alias]) &&
-							rs._cant_amistades = |(⊖ (i: int) ∈ rs._usuarios (rs._usr_id[i]._amigos))|
+
+		No existen dos usuarios con el mismo id ni el mismo alias.
+		La cantidad de amistades es la cantitdad de elementos en el conjunto obtenido a partir de hacer la diferencia simetrica entre los conjuntos de amigos de todos los usuarios,
+		Para todo id del conjunto usuarios, existe un unico par key/value en el map _usr_id donde la key es dicho id, y a su vez existe un unico par key/value en el map _usr_alias donde la key es el alias del usuario en el map _usr_id bajo dicho id
+		
+		Rep(rs : RedSocial) ≡ 
+								| rs._usuarios |  =  | rs._usr_id |  =  | rs._usr_alias | &&
+								values(_usr_id) = values(_usr_alias) &&
+								((∀u: Usuario) &u ∈ values(rs._usr_id) ↔
+									((∃!!i: int) i ∈ rs._usuarios => i = u.id) && 
+									((∃!!j: int) j ∈ keys(rs._usr_id) => rs._usr_id[j] = u => j = u.id) && 
+									((∃!!k: string) k ∈ keys(rs._usr_alias) => rs._usr_alias[k] = u)) &&
+								rs._cant_amistades =  | (⊖ (i: int) ∈ rs._usuarios (rs._usr_id[i]._amigos)) | && 
+								(| rs._usuarios | > 0 =>
+									rs._popular._id ∈ rs._usuarios &&
+									((∀i: int) i ∈ rs._usuarios => i._cantidad_amigos <= rs._popular._cantidad_amigos)
+									|| rs._popular = nullptr)
 */
 
 class RedSocial{
