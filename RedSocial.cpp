@@ -4,36 +4,62 @@
 using namespace std;
 
 RedSocial::RedSocial(){
+		/*
+			Pre: Verdadero
+			Post: Construye una red social vacía.
+		*/
+		
     this->_usuarios = *(new set<int>);
 		this->_cant_amistades = 0;
 		this->_popular = nullptr;
+		this->_usr_id = *(new map<int, Usuario*>);
+		this->_usr_alias = *(new map<string, Usuario*>);
 }
 
 const set<int> & RedSocial::usuarios() const{
+		/*
+			Pre: Verdadero
+			(Devuelve por referencia el conjunto de identificadores (id) de todos los usuarios actualmen- te registrados)
+		*/
 	
     return this->_usuarios;
 }
 
 string RedSocial::obtener_alias(int id) const{
+		/*
+			Pre: id está en el conjunto usuarios()
+			(Devuelve el alias del usuario correspondiente al identificador id)
+		*/
 
 		Usuario *usr = this->_usr_id.at(id); // O(log n)
-	
 		return usr->obtener_alias(); // O(1)
 }
 
 const set<string> & RedSocial::obtener_amigos(int id) const{
-	
-    Usuario *usr = this->_usr_id.at(id); // O(log n)
+		/*
+			Pre: id está en el conjunto usuarios()
+			(Devuelve por referencia el conjunto de los alias de los amigos del usuario id)
+		*/
     
+		Usuario *usr = this->_usr_id.at(id); // O(log n)
 		return usr->obtener_amigos(); // O(1)
 }
 
 int RedSocial::cantidad_amistades() const{
+		/*
+			Pre: Verdadero
+			(Devuelve la cantidad total de relaciones de amistad actualmente en la red. Si dos usuarios A y B son amigos eso cuenta como una relación de amistad.)
+		*/
   
     return this->_cant_amistades;
 }
 
 void RedSocial::registrar_usuario(string alias, int id){
+		/*
+			Pre: id no está en el conjunto usuarios(), alias no está asociado a ningún id, y la longitud de alias es menor o igual a 100.
+			Post: El conjunto usuarios() tiene un elemento más: id; y obtener_alias(id) devuelve alias.
+		*/
+	
     Usuario *usr = new Usuario(id, alias);
 
 		if (this->_popular == nullptr){
@@ -46,6 +72,11 @@ void RedSocial::registrar_usuario(string alias, int id){
 }
 
 void RedSocial::eliminar_usuario(int id){
+		/*
+			Pre: id está en el conjunto usuarios()
+			Post: Se elimina al usuario id del sistema y se eliminan todas las relaciones de amistad de las que participaba.
+		*/
+	
 		Usuario *usr = this->_usr_id.at(id); // O(log n)
 		string alias = usr->obtener_alias(); // O(1)
 
@@ -86,6 +117,11 @@ void RedSocial::eliminar_usuario(int id){
 }
 
 void RedSocial::amigar_usuarios(int id_A, int id_B){
+		/*
+			Pre: id_A y id_B están en el conjunto usuarios()
+			Post: El conjunto obtener_amigos(id_A) tiene un elemento más: id_B y el conjunto obtener_amigos(id_B) tiene un elemento más: id_A.
+		*/
+		
     Usuario *usr_A = this->_usr_id.at(id_A); // O(log n)
     Usuario *usr_B = this->_usr_id.at(id_B); // O(log n)
 	
@@ -107,6 +143,11 @@ void RedSocial::amigar_usuarios(int id_A, int id_B){
 }
 
 void RedSocial::desamigar_usuarios(int id_A, int id_B){
+		/*
+			Pre: id_A y id_B están en el conjunto usuarios() y son amigos.
+			Post: El conjunto obtener_amigos(id_A) tiene un elemento menos: id_B. El conjunto obtener_amigos(id_B) tiene un elemento menos: id_A.
+		*/
+	
     Usuario *usr_A = this->_usr_id.at(id_A); // O(log n)
     Usuario *usr_B = this->_usr_id.at(id_B); // O(log n)
 	
@@ -127,12 +168,20 @@ void RedSocial::desamigar_usuarios(int id_A, int id_B){
 }
 
 int RedSocial::obtener_id(string alias) const{
-		Usuario *usr = this->_usr_alias.at(alias); // O(log n)
+		/*
+			Pre: Hay un id en usuarios() que tiene asociado el alias alias. 
+			Post: Devuelve el id de usuarios() que tiene asociado el alias alias.
+		*/
 	
+		Usuario *usr = this->_usr_alias.at(alias); // O(log n)
     return usr->obtener_id(); // O(1)
 }
 
 const set<string> & RedSocial::amigos_del_usuario_mas_popular() const{
-    
+    /*
+			Pre: cantidad_amistades() es mayor a cero.
+			Post: Devuelve por referencia el conjunto de los alias de los amigos del usuario más popular (aquel que tenga la mayor cantidad de amigos de la red). Si hay más de un usuario más popular, devuelve los amigos correspondientes a cualquiera de ellos.
+		*/
+	
     return this->_popular->obtener_amigos();  // O(1)
 }
