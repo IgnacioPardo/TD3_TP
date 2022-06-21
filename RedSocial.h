@@ -9,21 +9,26 @@
 /*
 
 		No existen dos usuarios con el mismo id ni el mismo alias.
-		La cantidad de amistades es la cantitdad de elementos en el conjunto obtenido a partir de hacer la diferencia simetrica entre los conjuntos de amigos de todos los usuarios,
-		Para todo id del conjunto usuarios, existe un unico par key/value en el map _usr_id donde la key es dicho id, y a su vez existe un unico par key/value en el map _usr_alias donde la key es el alias del usuario en el map _usr_id bajo dicho id
+		La cantidad de amistades es igual a la mitad de la suma de todas las cantidades de amigos de todos los usuarios de la Red Social.
+		Para todo id del conjunto usuarios, existe un unico par key/value en el map _usr_id donde la key es dicho id, y su value es un puntero a un usuario con ese id, 
+		y a su vez existe un unico par key/value en el map _usr_alias donde la key es el alias del usuario en el map _usr_id bajo dicho id, y su value es un puntero a un usuario con ese id y ese alias.
+		Si la Red Social tiene usuarios registados, el usuario mas popular va a ser quien tenga mayor cantitad de amigos, de no tener, se indefine.
 		
 		Rep(rs : RedSocial) ≡ 
-								| rs._usuarios |  =  | rs._usr_id |  =  | rs._usr_alias | &&
-								values(_usr_id) = values(_usr_alias) &&
-								((∀u: Usuario) &u ∈ values(rs._usr_id) ↔
-									((∃!!i: int) i ∈ rs._usuarios => i = u.id) && 
-									((∃!!j: int) j ∈ keys(rs._usr_id) => rs._usr_id[j] = u => j = u.id) && 
-									((∃!!k: string) k ∈ keys(rs._usr_alias) => rs._usr_alias[k] = u)) &&
-								rs._cant_amistades =  | (⊖ (i: int) ∈ rs._usuarios (rs._usr_id[i]._amigos)) | && 
-								((| rs._usuarios | > 0 =>
-									rs._popular._id ∈ rs._usuarios &&
-									((∀i: int) i ∈ rs._usuarios => i._cantidad_amigos <= rs._popular._cantidad_amigos))
-									|| rs._popular = nullptr)
+						| rs._usuarios | = | rs._usr_id | = | rs._usr_alias | &&
+						values(rs._usr_id) = values(rs._usr_alias) && // mapEqualValues(rs._usr_id, rs._usr_alias) //
+						((∀u: Usuario) &u ∈ values(rs._usr_id) =>
+							((∃!!i: int) i ∈ rs._usuarios => i = u.id) && 
+							((∃!!j: int) j ∈ keys(rs._usr_id) => rs._usr_id[j] = u => j = u.id) && 
+							((∃!!k: string) k ∈ keys(rs._usr_alias) => rs._usr_alias[k] = u)) &&
+						rs._cant_amistades = | (∑ (i: int) ∈ rs._usuarios (rs._usr_id[i]._cantidad_amigos)) | / 2 && 
+						((| rs._usuarios | > 0 =>
+							rs._popular._id ∈ rs._usuarios &&
+							((∀i: int) i ∈ rs._usuarios => i._cantidad_amigos <= rs._popular._cantidad_amigos))
+							|| rs._popular = nullptr)
+
+		mapEqualValues(map<T, T_> a, map<T, T_> b) ≡ ((∀k: T) ∈ keys(a) => (∃!! k_: T) k_ ∈ keys(b) a[k] = b[k_]) && ((∀k: T) ∈ keys(b) => (∃!! k_: T) ∈ keys(a) a[k] = b[k_])
+
 */
 
 class RedSocial{

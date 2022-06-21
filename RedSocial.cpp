@@ -62,6 +62,7 @@ void RedSocial::registrar_usuario(string alias, int id){
 	
     Usuario *usr = new Usuario(id, alias);
 
+		// De ser el primer usuario se lo asigna como el usuario mas popular
 		if (this->_popular == nullptr){
 			this->_popular = usr;
 		}
@@ -81,29 +82,39 @@ void RedSocial::eliminar_usuario(int id){
 		string alias = usr->obtener_alias(); // O(1)
 
 	 	// O(n log n)
-		for (set<string>::iterator itr = usr->obtener_amigos().begin(); itr != usr->obtener_amigos().end(); itr++)
-  	{
-			Usuario *usr_O = _usr_alias.at(*itr); // O(log n)
+
+		// Elimina las apariciones del usuario a eliminar de las listas de amigos de sus amigos.
+		// Actualiza la cantidad de amistades de la Red Social
+		for (string s: usr->obtener_amigos())
+		{
+			Usuario *usr_O = _usr_alias.at(s); // O(log n)
 			int prev_amigos_O = usr_O->cantidad_amigos(); // O(1)
 			usr_O->desamigar_usuario(usr); // O(log n)
 			int amigos_O = usr_O->cantidad_amigos(); // O(1)
 			this->_cant_amistades -= prev_amigos_O - amigos_O;
 		}
+		// Desamiga a todos los usuarios por parte del usuario a eliminar
 		usr->desamigar_todos(); // O(n log n)
 		
 		// O(n log n)
+		// De haber sido el usuario a eliminar el mas popular, se asigna nullptr al puntero al usuario mas popular
 		if (this->_popular->obtener_id() == id){
 			this->_popular = nullptr;
-			for (set<int>::iterator itr = this->_usuarios.begin(); itr != this->_usuarios.end(); itr++) // O(n)
-	  	{
-				Usuario *usr_ = this->_usr_id.at(*itr); // O(log n)
-				if (this->_popular == nullptr){
-					this->_popular = usr_;
-				}
-				
-				if (usr_->cantidad_amigos() >= this->_popular->cantidad_amigos()) {
-					this->_popular = usr_;
-				}
+		}
+		// Itera por todos los usuarios y actualiza el mas popular
+		for (int id: this->_usuarios)
+		{
+			Usuario *usr_ = this->_usr_id.at(id); // O(log n)
+
+			// Si no hay usuario mas popular es por haber sido recientemente eliminado
+			// en ese caso se utilzia al primer usuario que devuelva el iterador de this->_usuarios como comienzo para el algoritmo de obtener el usuario mas popular
+			if (this->_popular == nullptr){
+				this->_popular = usr_;
+			}
+
+			//Determina el usuario mas popular
+			if (usr_->cantidad_amigos() >= this->_popular->cantidad_amigos()) {
+				this->_popular = usr_;
 			}
 		}
 		
@@ -113,7 +124,7 @@ void RedSocial::eliminar_usuario(int id){
 	  this->_usuarios.erase(id);
 		this->_usr_id.erase(id);
 		this->_usr_alias.erase(alias);
-
+	
 }
 
 void RedSocial::amigar_usuarios(int id_A, int id_B){
@@ -133,9 +144,10 @@ void RedSocial::amigar_usuarios(int id_A, int id_B){
 		this->_cant_amistades += amigos_A - prev_amigos_A;
 
 	 	// O(n log n)
-		for (set<int>::iterator itr = this->_usuarios.begin(); itr != this->_usuarios.end(); itr++)
-  	{
-			Usuario *usr = this->_usr_id.at(*itr); // O(log n)
+		// Itera por todos los usuarios y determina el nuevo usuario mas popular
+		for (int id: this->_usuarios)
+		{
+			Usuario *usr = this->_usr_id.at(id); // O(log n)
 			if (usr->cantidad_amigos() > this->_popular->cantidad_amigos()) {
 				this->_popular = usr;
 			}
@@ -158,9 +170,10 @@ void RedSocial::desamigar_usuarios(int id_A, int id_B){
 		this->_cant_amistades -= prev_amigos_A - amigos_A;
 
 		// O(n log n)
-		for (set<int>::iterator itr = this->_usuarios.begin(); itr != this->_usuarios.end(); itr++)
-  	{
-			Usuario *usr = this->_usr_id.at(*itr); // O(log n)
+		// Itera por todos los usuarios y determina el nuevo usuario mas popular
+		for (int id: this->_usuarios)
+		{
+			Usuario *usr = this->_usr_id.at(id); // O(log n)
 			if (usr->cantidad_amigos() > this->_popular->cantidad_amigos()) {
 				this->_popular = usr;
 			}
