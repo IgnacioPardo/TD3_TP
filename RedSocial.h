@@ -4,7 +4,7 @@
 #include <string>
 #include <set>
 #include <map>
-#include "Usuario.h"
+//#include "Usuario.h"
 
 /*
 
@@ -49,6 +49,27 @@ class RedSocial{
     const std::set<std::string> & amigos_del_usuario_mas_popular() const; // O(1)
 
   private:
+
+		class Usuario{
+		  public:
+				Usuario(int id_, std::string alias_);
+		    std::string obtener_alias() const; // O(1)
+				int obtener_id() const; // O(1)
+
+				int cantidad_amigos() const; // O(1);
+				const std::set<std::string> & obtener_amigos() const; // O(1)
+
+				void amigar_usuario(Usuario *usr); // O(log n)
+		    void desamigar_usuario(Usuario *usr); // O(log n)
+				void desamigar_todos(); //O(log n)
+
+			private:
+				int _id, _cantidad_amigos;
+		    std::string _alias;
+		    std::set<Usuario*> _amigos;
+		    std::set<std::string> _alias_amigos;    
+		};
+		
 		int _cant_amistades;
 		Usuario *_popular;
 		std::set<int> _usuarios;

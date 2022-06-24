@@ -13,8 +13,8 @@ FetchContent_MakeAvailable(googletest)
 
 include (CTest)
 
-add_executable(red_social red_social_main.cpp RedSocial.cpp Usuario.cpp)
-add_executable(red_social_tests red_social_tests.cpp RedSocial.cpp Usuario.cpp)
+add_executable(red_social red_social_main.cpp RedSocial.cpp)
+add_executable(red_social_tests red_social_tests.cpp RedSocial.cpp)
 
 target_link_libraries(
   red_social_tests
